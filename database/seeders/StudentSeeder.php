@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Student;
+use App\Models\Contact;
 use Illuminate\Database\Seeder;
 
 class StudentSeeder extends Seeder
@@ -12,7 +13,7 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        // Add multiple records
+        // Array of students
         $students = [
             ['name' => 'OMAIS', 'Email' => 'OMAIS@test.com'],
             ['name' => 'ALI', 'Email' => 'ALI@test.com'],
@@ -26,9 +27,18 @@ class StudentSeeder extends Seeder
             ['name' => 'RAHIM', 'Email' => 'RAHIM@test.com'],
         ];
 
-        // Insert each record
-        foreach ($students as $student) {
-            Student::create($student);
+        // Seed students and their associated contacts
+        foreach ($students as $studentData) {
+            $student = Student::create($studentData); // Create student
+
+            // Create associated contact for each student
+            Contact::create([
+                'student_id' => $student->id, // Foreign key
+                'email' => $studentData['Email'],
+                'phone' => fake()->phoneNumber(),
+                'address' => fake()->address(),
+                'city' => fake()->city(),
+            ]);
         }
     }
 }
